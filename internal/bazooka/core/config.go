@@ -21,9 +21,8 @@ type DatabaseArgs struct {
 	Charset  string `yaml:"charset"`
 }
 
-
 type BazookaConfig struct {
-	DbArgs	DatabaseArgs	`yaml:"database"`
+	DbArgs DatabaseArgs `yaml:"database"`
 }
 
 func (c *BazookaConfig) FromFile(p string) error {

@@ -10,7 +10,7 @@ type UserController struct {
 }
 
 func (c UserController) Validate(u *models.User) error {
-	if nil == u || ! u.IsValid() {
+	if nil == u || !u.IsValid() {
 		return errors.New("invalid user")
 	}
 
@@ -56,7 +56,6 @@ func (c UserController) UpdateUser(u *models.User) error {
 	u.ID = existed.ID
 	return c.saver.Save(u)
 }
-
 
 var userController *UserController
 

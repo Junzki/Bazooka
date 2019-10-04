@@ -4,7 +4,6 @@ import "github.com/jinzhu/gorm"
 
 var dbConn *gorm.DB
 
-
 //func GetDbConn() *gorm.DB {
 //	if nil != dbConn {
 //		return dbConn

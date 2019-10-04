@@ -11,7 +11,7 @@ const (
 	TempConfigFile = "temp-config.yaml"
 )
 
-func TestBazookaConfig_FromString (t *testing.T) {
+func TestBazookaConfig_FromString(t *testing.T) {
 	var err error = nil
 	in := `
 database:
@@ -26,7 +26,6 @@ database:
 	assert.Equal(t, "sqlite", c.DbArgs.Dialect)
 	assert.Equal(t, "fake-db-user", c.DbArgs.User)
 }
-
 
 func TestBazookaConfig_FromFile(t *testing.T) {
 	var err error = nil
