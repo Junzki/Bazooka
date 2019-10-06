@@ -1,8 +1,9 @@
 package controllers
 
 import (
-	"bazooka/internal/pkg/models"
 	"github.com/jinzhu/gorm"
+
+	"bazooka/internal/bazooka/models"
 )
 
 type IUserSaver interface {

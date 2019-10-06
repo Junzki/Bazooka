@@ -1,8 +1,10 @@
 package controllers
 
 import (
-	"bazooka/internal/pkg/models"
 	"errors"
+
+	"bazooka/internal/bazooka/core"
+	"bazooka/internal/bazooka/models"
 )
 
 type UserController struct {
@@ -59,13 +61,20 @@ func (c UserController) UpdateUser(u *models.User) error {
 
 var userController *UserController
 
-func GetUserController() *UserController {
+func GetUserController() (*UserController, error) {
 	if nil != userController {
-		return userController
+		return userController, nil
+	}
+
+	db, err := core.GetDbConn()
+	if nil != err {
+		return nil, err
 	}
 
 	userController = &UserController{
-		saver: &UserSaver{},
+		saver: &UserSaver{
+			db: db,
+		},
 	}
-	return userController
+	return userController, nil
 }

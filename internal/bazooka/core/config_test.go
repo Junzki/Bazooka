@@ -17,14 +17,19 @@ func TestBazookaConfig_FromString(t *testing.T) {
 database:
   dialect: sqlite
   user: fake-db-user
+  extra:
+    sslmode: 'require'
 `
 
 	c := BazookaConfig{}
 	err = c.FromString(in)
 	assert.NoError(t, err)
 
-	assert.Equal(t, "sqlite", c.DbArgs.Dialect)
-	assert.Equal(t, "fake-db-user", c.DbArgs.User)
+	assert.Equal(t, "sqlite", c.Database.Dialect)
+	assert.Equal(t, "fake-db-user", c.Database.User)
+
+	assert.NotNil(t, c.Database.Extra)
+	assert.Equal(t, "require", c.Database.Extra["sslmode"])
 }
 
 func TestBazookaConfig_FromFile(t *testing.T) {
@@ -42,8 +47,8 @@ database:
 	err = c.FromFile(TempConfigFile)
 	assert.NoError(t, err)
 
-	assert.Equal(t, "sqlite", c.DbArgs.Dialect)
-	assert.Equal(t, "fake-db-user", c.DbArgs.User)
+	assert.Equal(t, "sqlite", c.Database.Dialect)
+	assert.Equal(t, "fake-db-user", c.Database.User)
 
 	// Cleanup
 	_ = os.Remove(TempConfigFile)
