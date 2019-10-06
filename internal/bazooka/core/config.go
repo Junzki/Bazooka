@@ -11,14 +11,14 @@ import (
 )
 
 type DatabaseConf struct {
-	Dialect  string `yaml:"dialect"`
-	Host     string `yaml:"host"`
-	Port     uint   `yaml:"port"`
-	User     string `yaml:"user"`
-	Password string `yaml:"password"`
-	Name     string `yaml:"name"`
-	Charset  string `yaml:"charset"`
-	Extra    map[string] string `yaml:"extra"`
+	Dialect  string            `yaml:"dialect"`
+	Host     string            `yaml:"host"`
+	Port     uint              `yaml:"port"`
+	User     string            `yaml:"user"`
+	Password string            `yaml:"password"`
+	Name     string            `yaml:"name"`
+	Charset  string            `yaml:"charset"`
+	Extra    map[string]string `yaml:"extra"`
 }
 
 func (c DatabaseConf) GetConnString() (string, string, error) {
@@ -63,6 +63,7 @@ func (c DatabaseConf) getPostgresConn() (string, error) {
 }
 
 type BazookaConfig struct {
+	Debug    bool         `yaml:"debug"`
 	Listen   string       `yaml:"listen"`
 	Port     uint         `yaml:"port"`
 	Database DatabaseConf `yaml:"database"`
@@ -117,7 +118,8 @@ func GetConfig() *BazookaConfig {
 
 	config = &BazookaConfig{
 		Listen: "127.0.0.1",
-		Port: 8081,
+		Port:   8081,
+		Debug:  true,
 	}
 	return config
 }

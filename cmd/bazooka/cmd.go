@@ -7,6 +7,7 @@ import (
 	_ "github.com/sirupsen/logrus"
 
 	"bazooka/internal/bazooka/core"
+	"bazooka/internal/pkg/assets"
 )
 
 
@@ -28,13 +29,13 @@ func main() {
 	var err error = nil
 
 	cfg := core.GetConfig()
-	err = cfg.FromFile(configFile)
+	err = cfg.FromFile(assets.ExpandUserDir(configFile))
 	if nil != err {
 		log.Fatal(err.Error())
 	}
 
-	_, err = core.GetDbConn()
+	_, err = core.InitApp(cfg)
 	if nil != err {
-		log.Fatal(err.Error())
+		log.Fatal(err)
 	}
 }

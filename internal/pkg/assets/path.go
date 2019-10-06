@@ -10,7 +10,7 @@ const (
 	userHomeDirFlag = "~"
 )
 
-func expandUserDir(p string) string {
+func ExpandUserDir(p string) string {
 	if ! strings.HasPrefix(p, userHomeDirFlag) {
 		return p
 	}
