@@ -1,3 +1,4 @@
+-- Targeting PostgreSQL 10.x
 
 CREATE TABLE IF NOT EXISTS "bazooka_user" (
     id SERIAL PRIMARY KEY,
