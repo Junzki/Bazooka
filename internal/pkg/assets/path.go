@@ -31,3 +31,14 @@ func ExpandUserDir(p string) string {
 
 	return p
 }
+
+func CheckPath(p string) bool {
+	p = ExpandUserDir(p)
+
+	_, err := os.Stat(p)
+	if nil != err && os.IsNotExist(err) {
+		return false
+	}
+
+	return true
+}

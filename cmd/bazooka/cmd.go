@@ -2,21 +2,27 @@ package main
 
 import (
 	"flag"
-	"log"
+	"os"
 
-	_ "github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 
 	"bazooka/internal/bazooka/core"
 	"bazooka/internal/pkg/assets"
 )
 
-
 var (
 	configFile string
+	dir        string
 )
 
 func loadFlags() {
+	cwd, err := os.Getwd()
+	if nil != err {
+		cwd = ""
+	}
+
 	flag.StringVar(&configFile, "c", "", "Path to config file.")
+	flag.StringVar(&dir, "chdir", cwd, "Working directory, current directory by default.")
 	flag.Parse()
 }
 
@@ -34,7 +40,7 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	_, err = core.InitApp(cfg)
+	_, err = core.InitApp(cfg, dir)
 	if nil != err {
 		log.Fatal(err)
 	}

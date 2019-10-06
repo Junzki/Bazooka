@@ -1,9 +1,14 @@
 package core
 
 import (
+	"os"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	log "github.com/sirupsen/logrus"
 	"golang.org/x/exp/errors"
+
+	"bazooka/internal/pkg/assets"
 )
 
 type BazookaApp struct {
@@ -11,6 +16,7 @@ type BazookaApp struct {
 	DbConn *gorm.DB
 
 	Engine *gin.Engine
+	BaseDir string
 }
 
 
@@ -33,12 +39,17 @@ func InitApp(c *BazookaConfig, extra...interface{}) (*BazookaApp, error) {
 
 	if ! c.Debug {
 		gin.SetMode(gin.ReleaseMode)
+		log.SetLevel(log.InfoLevel)
+	} else {
+		log.SetLevel(log.DebugLevel)
 	}
 
+	cwd, _ := os.Getwd()
 	app = &BazookaApp{
 		Config: c,
 		DbConn: nil,
-		Engine: nil,
+		Engine: gin.Default(),
+		BaseDir: cwd,
 	}
 
 	for _, i := range extra{
@@ -51,6 +62,12 @@ func InitApp(c *BazookaConfig, extra...interface{}) (*BazookaApp, error) {
 			app.DbConn = v
 		case *gin.Engine:
 			app.Engine = v
+		case string:
+			// Maybe BaseDir
+			if assets.CheckPath(v) {
+				app.BaseDir = v
+				continue
+			}
 		default:
 			continue
 		}
@@ -64,9 +81,6 @@ func InitApp(c *BazookaConfig, extra...interface{}) (*BazookaApp, error) {
 		app.DbConn = db
 	}
 
-	if nil == app.Engine {
-		app.Engine = gin.Default()
-	}
-
+	log.Debugf("Working directory: %s", app.BaseDir)
 	return app, nil
 }
