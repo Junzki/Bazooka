@@ -1,14 +1,19 @@
 package core
 
 import (
+	"fmt"
+	"net/http"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/exp/errors"
 
+	"bazooka/internal/bazooka/routes"
 	"bazooka/internal/pkg/assets"
+	routeConfig "bazooka/internal/pkg/config"
 )
 
 type BazookaApp struct {
@@ -17,6 +22,30 @@ type BazookaApp struct {
 
 	Engine *gin.Engine
 	BaseDir string
+}
+
+func (a *BazookaApp) Svc() *http.Server {
+	addr := fmt.Sprintf("%s:%d", a.Config.Listen, a.Config.Port)
+
+	svc := &http.Server{
+		Addr:              addr,
+		Handler:           a.Engine,
+		TLSConfig:         nil,
+		ReadTimeout:       5 * time.Second,
+		WriteTimeout:      10 * time.Second,
+	}
+
+	return svc
+}
+
+func (a *BazookaApp) RegisterRouteSet(s *routeConfig.RouteSet) {
+	prefix := s.Prefix
+	if "" == prefix {
+		prefix = "/"
+	}
+
+	group := a.Engine.Group(prefix)
+	s.Bind(group)
 }
 
 
@@ -81,6 +110,12 @@ func InitApp(c *BazookaConfig, extra...interface{}) (*BazookaApp, error) {
 		app.DbConn = db
 	}
 
+	loadRouteSets(app)
+
 	log.Debugf("Working directory: %s", app.BaseDir)
 	return app, nil
+}
+
+func loadRouteSets(a *BazookaApp) {
+	a.RegisterRouteSet(&routes.PublicRouteSet)
 }

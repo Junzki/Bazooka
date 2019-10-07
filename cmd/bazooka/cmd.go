@@ -40,8 +40,10 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
-	_, err = core.InitApp(cfg, dir)
+	app, err := core.InitApp(cfg, dir)
 	if nil != err {
 		log.Fatal(err)
 	}
+
+	_ = app.Svc().ListenAndServe()
 }
