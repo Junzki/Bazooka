@@ -8,8 +8,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
-	"golang.org/x/exp/errors"
 
 	"bazooka/internal/bazooka/routes"
 	"bazooka/internal/pkg/assets"

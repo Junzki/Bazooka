@@ -6,6 +6,8 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	"golang.org/x/sync/errgroup"
+
 	"bazooka/internal/bazooka/core"
 	"bazooka/internal/pkg/assets"
 )
@@ -13,6 +15,7 @@ import (
 var (
 	configFile string
 	dir        string
+	g          errgroup.Group
 )
 
 func loadFlags() {
@@ -45,5 +48,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	_ = app.Svc().ListenAndServe()
+	svc := app.Svc()
+	g.Go(svc.ListenAndServe)
+
+	if err = g.Wait(); nil != err {
+		log.Fatal(err)
+	}
 }

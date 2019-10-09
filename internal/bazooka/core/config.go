@@ -1,14 +1,36 @@
 package core
 
 import (
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/pkg/errors"
 	"gopkg.in/yaml.v2"
 )
+
+type AWSConf struct {
+	AccessKey string            `yaml:"access_key"`
+	Secret    string            `yaml:"secret"`
+	Region    string            `yaml:"secret"`
+	Extra     map[string]string `yaml:"extra"`
+}
+
+func (a AWSConf) GetConfig() (*aws.Config, error) {
+	if "" == a.Region || "" == a.AccessKey || "" == a.Secret {
+		return nil, errors.New("required fields are empty")
+	}
+
+	c := &aws.Config{
+		Credentials:                       credentials.NewStaticCredentials(a.AccessKey, a.Secret, ""),
+		Region:                            aws.String(a.Region),
+	}
+
+	return c, nil
+}
 
 type DatabaseConf struct {
 	Dialect  string            `yaml:"dialect"`
