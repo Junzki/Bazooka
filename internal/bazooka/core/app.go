@@ -11,7 +11,6 @@ import (
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 
-	"bazooka/internal/bazooka/routes"
 	"bazooka/internal/pkg/assets"
 	routeConfig "bazooka/internal/pkg/config"
 )
@@ -117,5 +116,5 @@ func InitApp(c *BazookaConfig, extra...interface{}) (*BazookaApp, error) {
 }
 
 func loadRouteSets(a *BazookaApp) {
-	a.RegisterRouteSet(&routes.PublicRouteSet)
+	a.RegisterRouteSet(&PublicRouteSet)
 }

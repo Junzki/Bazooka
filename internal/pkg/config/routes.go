@@ -5,7 +5,7 @@ import "github.com/gin-gonic/gin"
 type Route struct {
 	Method  string
 	Route   string
-	Handler gin.HandlerFunc
+	Handlers gin.HandlersChain
 }
 
 type RouteSet struct {
@@ -21,6 +21,6 @@ func (s *RouteSet) Bind(r gin.IRoutes) {
 	}
 
 	for _, route := range s.Routes {
-		r.Handle(route.Method, route.Route, route.Handler)
+		r.Handle(route.Method, route.Route, route.Handlers...)
 	}
 }
